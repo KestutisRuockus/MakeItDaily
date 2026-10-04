@@ -8,11 +8,13 @@ import "@/global.css";
 import { Platform } from "react-native";
 
 export const Colors = {
-  background: "#FFFFFF",
-  backgroundElement: "#F0F0F3",
-  backgroundSelected: "#E0E1E6",
-  text: "#000000",
-  textSecondary: "#60646C",
+  background: "#27282a",
+  surface: "#353639",
+  accent: "#9185F9",
+  textPrimary: "#FFFFFF",
+  textSecondary: "#B0B3BC",
+  textAccent: "#27282A",
+  border: "#45464A",
 } as const;
 
 export type ThemeColor = keyof typeof Colors;
@@ -43,13 +45,15 @@ export const Fonts = Platform.select({
 });
 
 export const Spacing = {
-  half: 2,
   one: 4,
   two: 8,
   three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
+} as const;
+
+export const FontSize = {
+  body: 12,
+  subTitle: 24,
+  title: 32,
 } as const;
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;

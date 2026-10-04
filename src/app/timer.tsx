@@ -1,6 +1,12 @@
-import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
+import {
+  BottomTabInset,
+  Colors,
+  FontSize,
+  MaxContentWidth,
+  Spacing,
+} from "@/constants/theme";
 import React, { useEffect } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Timer() {
   const [timer, setTimer] = React.useState(0);
@@ -35,14 +41,28 @@ export default function Timer() {
   return (
     <View style={styles.container}>
       <View style={styles.heroSection}>
-        <Text>Timer</Text>
-        <Text>{formatTime(timer)}</Text>
+        <Text style={styles.title}>Timer</Text>
+        <Text style={styles.timer}>{formatTime(timer)}</Text>
         <View style={styles.center}>
-          <Button title="Start" onPress={() => setTimerStarted(true)} />
+          {!timerStarted && (
+            <Pressable
+              style={styles.button}
+              onPress={() => setTimerStarted(true)}
+            >
+              <Text style={styles.buttonText}>Start</Text>
+            </Pressable>
+          )}
           {timer > 0 && !timerStarted ? (
-            <Button title="Reset" onPress={resetTimer} />
+            <Pressable style={styles.button} onPress={resetTimer}>
+              <Text style={styles.buttonText}>Reset</Text>
+            </Pressable>
           ) : timer > 0 && timerStarted ? (
-            <Button title="Pause" onPress={() => setTimerStarted(false)} />
+            <Pressable
+              style={styles.button}
+              onPress={() => setTimerStarted(false)}
+            >
+              <Text style={styles.buttonText}>Pause</Text>
+            </Pressable>
           ) : null}
         </View>
       </View>
@@ -55,10 +75,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     flexDirection: "row",
+    backgroundColor: Colors.background,
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
+    paddingHorizontal: Spacing.two,
     alignItems: "center",
     gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.three,
@@ -68,25 +89,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    paddingHorizontal: Spacing.two,
+    gap: Spacing.two,
   },
   title: {
     textAlign: "center",
+    color: Colors.textPrimary,
+    fontSize: FontSize.title,
   },
-  code: {
+  timer: {
     textTransform: "uppercase",
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: "stretch",
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+    color: Colors.textPrimary,
+    fontSize: FontSize.subTitle,
   },
   center: {
     justifyContent: "center",
     flexDirection: "row",
-    gap: Spacing.four,
+    gap: Spacing.two,
+  },
+  button: {
+    backgroundColor: Colors.accent,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
+    borderRadius: 12,
+  },
+
+  buttonText: {
+    color: Colors.textAccent,
+    fontWeight: "600",
   },
 });

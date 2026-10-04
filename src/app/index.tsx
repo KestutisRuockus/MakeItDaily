@@ -1,14 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
+import {
+  BottomTabInset,
+  Colors,
+  FontSize,
+  MaxContentWidth,
+  Spacing,
+} from "@/constants/theme";
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.heroSection}>
-          <Text>Make It Daily</Text>
+          <Text style={styles.title}>Make It Daily</Text>
         </View>
       </SafeAreaView>
     </View>
@@ -20,10 +26,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     flexDirection: "row",
+    backgroundColor: Colors.background,
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
+    paddingHorizontal: Spacing.two,
     alignItems: "center",
     gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.three,
@@ -33,11 +40,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    paddingHorizontal: Spacing.two,
+    gap: Spacing.two,
   },
   title: {
     textAlign: "center",
+    color: Colors.accent,
+    fontSize: FontSize.title,
   },
   code: {
     textTransform: "uppercase",
@@ -46,7 +55,7 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     alignSelf: "stretch",
     paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+    paddingVertical: Spacing.two,
+    borderRadius: Spacing.two,
   },
 });
