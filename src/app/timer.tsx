@@ -5,12 +5,23 @@ import {
   MaxContentWidth,
   Spacing,
 } from "@/constants/theme";
-import React, { useEffect } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  Animated,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function Timer() {
   const [timer, setTimer] = React.useState(0);
   const [timerStarted, setTimerStarted] = React.useState(false);
+  const [intervals, setIntervals] = React.useState<number[]>([]);
+
+  const intervalRef = useRef<ScrollView>(null);
+  const bgAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (timerStarted) {
@@ -38,18 +49,66 @@ export default function Timer() {
     )}:${String(ms).padStart(3, "0")}`;
   };
 
+  const markInterval = () => {
+    setIntervals([...intervals, timer]);
+    intervalRef.current?.scrollToEnd({ animated: true });
+    flashIntervals();
+  };
+
+  const flashIntervals = () => {
+    Animated.parallel([
+      Animated.sequence([
+        Animated.timing(bgAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(bgAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+      ]),
+    ]).start();
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.heroSection}>
+      <Text style={styles.intervalsTitle}>Intervals</Text>
+      <Animated.ScrollView
+        ref={intervalRef}
+        contentContainerStyle={styles.intervalsContent}
+        showsVerticalScrollIndicator
+        style={[
+          styles.intervalsContainer,
+          {
+            backgroundColor: bgAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [Colors.surface, "#4A4B50"],
+            }),
+          },
+        ]}
+      >
+        {intervals.map((interval, index) => (
+          <Text key={index} style={styles.timer}>
+            {formatTime(interval)}
+          </Text>
+        ))}
+      </Animated.ScrollView>
+      <View style={styles.timerContainer}>
         <Text style={styles.title}>Timer</Text>
         <Text style={styles.timer}>{formatTime(timer)}</Text>
         <View style={styles.center}>
-          {!timerStarted && (
+          {!timerStarted ? (
             <Pressable
               style={styles.button}
               onPress={() => setTimerStarted(true)}
             >
               <Text style={styles.buttonText}>Start</Text>
+            </Pressable>
+          ) : (
+            <Pressable style={styles.button} onPress={markInterval}>
+              <Text style={styles.buttonText}>Interval</Text>
             </Pressable>
           )}
           {timer > 0 && !timerStarted ? (
@@ -73,8 +132,8 @@ export default function Timer() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
     backgroundColor: Colors.background,
   },
   safeArea: {
@@ -85,17 +144,38 @@ const styles = StyleSheet.create({
     paddingBottom: BottomTabInset + Spacing.three,
     maxWidth: MaxContentWidth,
   },
-  heroSection: {
+  timerContainer: {
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
     paddingHorizontal: Spacing.two,
     gap: Spacing.two,
+    maxHeight: "25%",
+    width: "100%",
+    borderTopWidth: 1,
+    borderColor: Colors.border,
+  },
+  intervalsContainer: {
+    flex: 1,
+    paddingHorizontal: Spacing.two,
+    maxHeight: "65%",
+    width: "100%",
+  },
+  intervalsContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: Spacing.two,
   },
   title: {
     textAlign: "center",
     color: Colors.textPrimary,
     fontSize: FontSize.title,
+  },
+  intervalsTitle: {
+    textAlign: "center",
+    color: Colors.textPrimary,
+    fontSize: FontSize.title,
+    marginBottom: Spacing.one,
   },
   timer: {
     textTransform: "uppercase",
