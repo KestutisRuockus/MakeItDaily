@@ -5,22 +5,26 @@ import {
   MaxContentWidth,
   Spacing,
 } from "@/constants/theme";
+import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
+  type ScrollViewInstance,
 } from "react-native";
 
 export default function Timer() {
   const [timer, setTimer] = React.useState(0);
   const [timerStarted, setTimerStarted] = React.useState(false);
   const [intervals, setIntervals] = React.useState<number[]>([]);
+  const [intervalsHistory, setIntervalsHistory] = React.useState<number[][]>(
+    [],
+  );
 
-  const intervalRef = useRef<ScrollView>(null);
+  const intervalRef = useRef<ScrollViewInstance>(null);
   const bgAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -36,6 +40,10 @@ export default function Timer() {
   const resetTimer = () => {
     setTimerStarted(false);
     setTimer(0);
+    if (intervals.length > 0) {
+      setIntervalsHistory([...intervalsHistory, intervals]);
+    }
+    setIntervals([]);
   };
 
   const formatTime = (milliseconds: number) => {
@@ -83,8 +91,8 @@ export default function Timer() {
           styles.intervalsContainer,
           {
             backgroundColor: bgAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [Colors.surface, "#4A4B50"],
+              inputRange: [0, 2],
+              outputRange: [Colors.surface, Colors.background],
             }),
           },
         ]}
@@ -95,6 +103,16 @@ export default function Timer() {
           </Text>
         ))}
       </Animated.ScrollView>
+      {intervalsHistory.length > 0 && (
+        <Pressable
+          style={styles.showIntervalsHistoryBtn}
+          onPress={() => router.push("/intervals-history")}
+        >
+          <Text style={styles.buttonText}>
+            Intervals history ({intervalsHistory.length})
+          </Text>
+        </Pressable>
+      )}
       <View style={styles.timerContainer}>
         <Text style={styles.title}>Timer</Text>
         <Text style={styles.timer}>{formatTime(timer)}</Text>
@@ -165,6 +183,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: Spacing.two,
+  },
+  showIntervalsHistoryBtn: {
+    position: "absolute",
+    bottom: "26%",
+    right: "5%",
+    padding: Spacing.two,
+    backgroundColor: Colors.accent,
+    borderRadius: 8,
   },
   title: {
     textAlign: "center",

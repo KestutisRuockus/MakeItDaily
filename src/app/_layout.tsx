@@ -1,11 +1,23 @@
-import { NativeTabs } from "expo-router/build/native-tabs";
-// import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { Colors } from "@/constants/theme";
+import { Stack } from "expo-router";
 
-export default function TabLayout() {
+export default function RootLayout() {
   return (
-    <NativeTabs>
-      <NativeTabs.Trigger name="index" />
-      <NativeTabs.Trigger name="timer" />
-    </NativeTabs>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="intervals-history"
+        options={{
+          title: "Intervals History",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTintColor: Colors.accent,
+          headerTitleStyle: {
+            color: Colors.accent,
+          },
+        }}
+      />
+    </Stack>
   );
 }
