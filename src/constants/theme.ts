@@ -48,6 +48,9 @@ export const Spacing = {
   one: 4,
   two: 8,
   three: 16,
+  four: 24,
+  five: 32,
+  six: 40,
 } as const;
 
 export const FontSize = {

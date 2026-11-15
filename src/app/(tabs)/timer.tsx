@@ -17,12 +17,15 @@ import {
 } from "react-native";
 
 export default function Timer() {
-  const [timer, setTimer] = React.useState(0);
-  const [timerStarted, setTimerStarted] = React.useState(false);
+  const [timer, setTimer] = React.useState<number>(0);
+  const [timerStarted, setTimerStarted] = React.useState<boolean>(false);
   const [intervals, setIntervals] = React.useState<number[]>([]);
-  const [intervalsHistory, setIntervalsHistory] = React.useState<number[][]>(
-    [],
-  );
+  const [overallTime, setOverallTime] = React.useState<number>(0);
+  const [overallTimeAtLastInterval, setOverallTimeAtLastInterval] =
+    React.useState(0);
+  const [intervalsHistory, setIntervalsHistory] = React.useState<
+    { intervals: number[]; overallTime: number }[]
+  >([]);
 
   const intervalRef = useRef<ScrollViewInstance>(null);
   const bgAnim = useRef(new Animated.Value(0)).current;
@@ -31,6 +34,7 @@ export default function Timer() {
     if (timerStarted) {
       const interval = setInterval(() => {
         setTimer((prevTimer) => prevTimer + 10);
+        setOverallTime((prevOverallTime) => prevOverallTime + 10);
       }, 10);
 
       return () => clearInterval(interval);
@@ -39,10 +43,19 @@ export default function Timer() {
 
   const resetTimer = () => {
     setTimerStarted(false);
-    setTimer(0);
+
     if (intervals.length > 0) {
-      setIntervalsHistory([...intervalsHistory, intervals]);
+      setIntervalsHistory((prev) => [
+        ...prev,
+        {
+          intervals: [...intervals],
+          overallTime: overallTimeAtLastInterval,
+        },
+      ]);
     }
+
+    setTimer(0);
+    setOverallTime(0);
     setIntervals([]);
   };
 
@@ -57,10 +70,21 @@ export default function Timer() {
     )}:${String(ms).padStart(3, "0")}`;
   };
 
+  useEffect(() => {
+    console.log(
+      "Intervals history:",
+      JSON.stringify(intervalsHistory, null, 2),
+    );
+  }, [intervalsHistory]);
+
   const markInterval = () => {
-    setIntervals([...intervals, timer]);
-    intervalRef.current?.scrollToEnd({ animated: true });
-    flashIntervals();
+    if (timer > 0) {
+      setIntervals([...intervals, timer]);
+      setOverallTimeAtLastInterval(overallTime);
+      setTimer(0);
+      intervalRef.current?.scrollToEnd({ animated: true });
+      flashIntervals();
+    }
   };
 
   const flashIntervals = () => {
@@ -99,10 +123,19 @@ export default function Timer() {
       >
         {intervals.map((interval, index) => (
           <Text key={index} style={styles.timer}>
-            {formatTime(interval)}
+            {`${index + 1}). ${formatTime(interval)}`}
           </Text>
         ))}
+        {timerStarted || intervals.length > 0 ? (
+          <Text style={styles.timer}>
+            <Text style={styles.smallNumber}> Overall: </Text>
+            {formatTime(overallTime)}
+          </Text>
+        ) : (
+          ""
+        )}
       </Animated.ScrollView>
+
       {intervalsHistory.length > 0 && (
         <Pressable
           style={styles.showIntervalsHistoryBtn}
@@ -115,7 +148,11 @@ export default function Timer() {
       )}
       <View style={styles.timerContainer}>
         <Text style={styles.title}>Timer</Text>
-        <Text style={styles.timer}>{formatTime(timer)}</Text>
+        <Text style={styles.timer}>
+          <Text style={styles.smallNumber}>Interval: </Text>
+          {formatTime(timer)}
+        </Text>
+
         <View style={styles.center}>
           {!timerStarted ? (
             <Pressable
@@ -182,7 +219,11 @@ const styles = StyleSheet.create({
   intervalsContent: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: Spacing.two,
+    paddingTop: Spacing.two,
+    paddingBottom: Spacing.six,
+  },
+  smallNumber: {
+    fontSize: 14,
   },
   showIntervalsHistoryBtn: {
     position: "absolute",
