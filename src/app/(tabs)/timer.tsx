@@ -5,6 +5,7 @@ import {
   MaxContentWidth,
   Spacing,
 } from "@/constants/theme";
+import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
 import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import {
@@ -23,9 +24,10 @@ export default function Timer() {
   const [overallTime, setOverallTime] = React.useState<number>(0);
   const [overallTimeAtLastInterval, setOverallTimeAtLastInterval] =
     React.useState(0);
-  const [intervalsHistory, setIntervalsHistory] = React.useState<
-    { intervals: number[]; overallTime: number }[]
-  >([]);
+  const { intervalsHistory, setIntervalsHistory } = useIntervalsHistory();
+  // const [intervalsHistory, setIntervalsHistory] = React.useState<
+  //   { intervals: number[]; overallTime: number }[]
+  // >([]);
 
   const intervalRef = useRef<ScrollViewInstance>(null);
   const bgAnim = useRef(new Animated.Value(0)).current;
@@ -69,13 +71,6 @@ export default function Timer() {
       "0",
     )}:${String(ms).padStart(3, "0")}`;
   };
-
-  useEffect(() => {
-    console.log(
-      "Intervals history:",
-      JSON.stringify(intervalsHistory, null, 2),
-    );
-  }, [intervalsHistory]);
 
   const markInterval = () => {
     if (timer > 0) {

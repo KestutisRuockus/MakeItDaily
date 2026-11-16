@@ -32,3 +32,14 @@ export const IntervalsHistoryProvider = ({
     </IntervalsHistoryContext.Provider>
   );
 };
+
+export const useIntervalsHistory = () => {
+  const context = React.useContext(IntervalsHistoryContext);
+  if (!context) {
+    throw new Error(
+      "useIntervalsHistory must be used within an IntervalsHistoryProvider",
+    );
+  }
+
+  return context;
+};
