@@ -1,3 +1,4 @@
+import IntervalCard from "@/components/IntervalCard";
 import {
   BottomTabInset,
   Colors,
@@ -6,47 +7,25 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
-import { useEffect } from "react";
 
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export default function IntervalsHistory() {
   const { intervalsHistory } = useIntervalsHistory();
-  useEffect(() => {
-    console.log(
-      "Intervals history:",
-      JSON.stringify(intervalsHistory, null, 2),
-    );
-  }, [intervalsHistory]);
-
-  const formatTime = (milliseconds: number) => {
-    const minutes = Math.floor(milliseconds / 60000);
-    const seconds = Math.floor((milliseconds % 60000) / 1000);
-    const ms = milliseconds % 1000;
-
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-      2,
-      "0",
-    )}:${String(ms).padStart(3, "0")}`;
-  };
 
   return (
     <View style={styles.container}>
       <View style={styles.safeArea}>
-        <Text style={styles.title}>Make It Daily</Text>
         {intervalsHistory.length === 0 ? (
           <Text style={{ color: Colors.accent, textAlign: "center" }}>
             No intervals history yet. Start a timer to create some history!
           </Text>
         ) : (
           <FlatList
+            contentContainerStyle={styles.list}
             data={intervalsHistory}
-            renderItem={({ item, index }) => (
-              <Text style={styles.interval}>
-                {`${index + 1} list has ${item.intervals.length} Total intervals`}
-              </Text>
-            )}
-            keyExtractor={(_, index) => index.toString()}
+            renderItem={({ item }) => <IntervalCard item={item} />}
+            keyExtractor={(item) => item.id}
           />
         )}
       </View>
@@ -60,6 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     backgroundColor: Colors.surface,
+    paddingTop: Spacing.three,
   },
   safeArea: {
     flex: 1,
@@ -78,5 +58,9 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: Colors.textPrimary,
     fontSize: FontSize.subTitle,
+  },
+  list: {
+    width: "100%",
+    gap: Spacing.three,
   },
 });

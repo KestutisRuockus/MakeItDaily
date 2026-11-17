@@ -6,6 +6,7 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
+import { formatTime } from "@/utils/formatTime";
 import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import {
@@ -25,9 +26,6 @@ export default function Timer() {
   const [overallTimeAtLastInterval, setOverallTimeAtLastInterval] =
     React.useState(0);
   const { intervalsHistory, setIntervalsHistory } = useIntervalsHistory();
-  // const [intervalsHistory, setIntervalsHistory] = React.useState<
-  //   { intervals: number[]; overallTime: number }[]
-  // >([]);
 
   const intervalRef = useRef<ScrollViewInstance>(null);
   const bgAnim = useRef(new Animated.Value(0)).current;
@@ -47,29 +45,22 @@ export default function Timer() {
     setTimerStarted(false);
 
     if (intervals.length > 0) {
+      const now = new Date();
       setIntervalsHistory((prev) => [
         ...prev,
         {
+          id: now.getTime().toString(),
           intervals: [...intervals],
           overallTime: overallTimeAtLastInterval,
+          date: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}.${String(now.getMinutes()).padStart(2, "0")}`,
         },
       ]);
     }
 
     setTimer(0);
     setOverallTime(0);
+    setOverallTimeAtLastInterval(0);
     setIntervals([]);
-  };
-
-  const formatTime = (milliseconds: number) => {
-    const minutes = Math.floor(milliseconds / 60000);
-    const seconds = Math.floor((milliseconds % 60000) / 1000);
-    const ms = milliseconds % 1000;
-
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-      2,
-      "0",
-    )}:${String(ms).padStart(3, "0")}`;
   };
 
   const markInterval = () => {

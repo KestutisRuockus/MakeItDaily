@@ -1,8 +1,10 @@
 import React, { createContext } from "react";
 
-type IntervalHistoryItem = {
+export type IntervalHistoryItem = {
+  id: string;
   intervals: number[];
   overallTime: number;
+  date: string;
 };
 
 type IntervalsHistoryContextProps = {
