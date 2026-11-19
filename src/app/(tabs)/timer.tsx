@@ -125,7 +125,11 @@ export default function Timer() {
       {intervalsHistory.length > 0 && (
         <Pressable
           style={styles.showIntervalsHistoryBtn}
-          onPress={() => router.push("/intervals-history")}
+          onPress={() =>
+            router.push({
+              pathname: "/intervals-history",
+            })
+          }
         >
           <Text style={styles.buttonText}>
             Intervals history ({intervalsHistory.length})

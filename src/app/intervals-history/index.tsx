@@ -7,19 +7,29 @@ import {
   Spacing,
 } from "@/constants/theme";
 import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
+import { useRouter } from "expo-router";
 
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function IntervalsHistory() {
   const { intervalsHistory } = useIntervalsHistory();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <View style={styles.safeArea}>
         {intervalsHistory.length === 0 ? (
-          <Text style={{ color: Colors.accent, textAlign: "center" }}>
-            No intervals history yet. Start a timer to create some history!
-          </Text>
+          <>
+            <Text style={styles.bodyText}>
+              No intervals history yet. Start a timer to create some history!
+            </Text>
+            <Pressable
+              onPress={() => router.push("/(tabs)/timer")}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Open Timer</Text>
+            </Pressable>
+          </>
         ) : (
           <FlatList
             contentContainerStyle={styles.list}
@@ -62,5 +72,22 @@ const styles = StyleSheet.create({
   list: {
     width: "100%",
     gap: Spacing.three,
+  },
+  button: {
+    backgroundColor: Colors.accent,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.two,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: Colors.textAccent,
+    fontWeight: "600",
+  },
+  bodyText: {
+    color: Colors.textPrimary,
+    fontSize: 20,
+    textAlign: "center",
+    padding: Spacing.three,
   },
 });

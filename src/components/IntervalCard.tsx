@@ -1,6 +1,7 @@
 import { Colors, Spacing } from "@/constants/theme";
 import { IntervalHistoryItem } from "@/context/IntervalsHistoryContext";
 import { formatTime } from "@/utils/formatTime";
+import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type IntervalCardProps = {
@@ -8,8 +9,17 @@ type IntervalCardProps = {
 };
 
 export default function IntervalCard({ item }: IntervalCardProps) {
+  const router = useRouter();
   return (
-    <Pressable style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() =>
+        router.push({
+          pathname: "/intervals-history/[id]",
+          params: { id: item.id },
+        })
+      }
+    >
       <View style={styles.heading}>
         <Text style={styles.headingText}>{item.date}</Text>
         <Text style={styles.headingText}>
