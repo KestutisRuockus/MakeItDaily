@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import {
   BottomTabInset,
   Colors,
@@ -11,23 +12,17 @@ import {
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
+    <ScreenContainer>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.heroSection}>
           <Text style={styles.title}>Make It Daily</Text>
         </View>
       </SafeAreaView>
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    flexDirection: "row",
-    backgroundColor: Colors.background,
-  },
   safeArea: {
     flex: 1,
     paddingHorizontal: Spacing.two,
@@ -47,9 +42,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: Colors.accent,
     fontSize: FontSize.title,
-  },
-  code: {
-    textTransform: "uppercase",
   },
   stepContainer: {
     gap: Spacing.three,

@@ -1,19 +1,14 @@
-import {
-  BottomTabInset,
-  Colors,
-  FontSize,
-  MaxContentWidth,
-  Spacing,
-} from "@/constants/theme";
+import { FormattedTime } from "@/components/ui/FormattedTime";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { ScreenContainer } from "@/components/ui/ScreenContainer";
+import { Title } from "@/components/ui/Title";
+import { Colors, Spacing } from "@/constants/theme";
 import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
-import { formatTime } from "@/utils/formatTime";
 import { router } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
-  Pressable,
   StyleSheet,
-  Text,
   View,
   type ScrollViewInstance,
 } from "react-native";
@@ -90,9 +85,15 @@ export default function Timer() {
     ]).start();
   };
 
+  const openIntervalsHistory = () => {
+    router.push({
+      pathname: "/intervals-history",
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.intervalsTitle}>Intervals</Text>
+    <ScreenContainer>
+      <Title>Intervals</Title>
       <Animated.ScrollView
         ref={intervalRef}
         contentContainerStyle={styles.intervalsContent}
@@ -108,87 +109,50 @@ export default function Timer() {
         ]}
       >
         {intervals.map((interval, index) => (
-          <Text key={index} style={styles.timer}>
-            {`${index + 1}). ${formatTime(interval)}`}
-          </Text>
+          <FormattedTime key={index} label={`${index + 1})`} time={interval} />
         ))}
         {timerStarted || intervals.length > 0 ? (
-          <Text style={styles.timer}>
-            <Text style={styles.smallNumber}> Overall: </Text>
-            {formatTime(overallTime)}
-          </Text>
+          <FormattedTime label={"Overall : "} time={overallTime} />
         ) : (
           ""
         )}
       </Animated.ScrollView>
 
       {intervalsHistory.length > 0 && (
-        <Pressable
-          style={styles.showIntervalsHistoryBtn}
-          onPress={() =>
-            router.push({
-              pathname: "/intervals-history",
-            })
-          }
-        >
-          <Text style={styles.buttonText}>
-            Intervals history ({intervalsHistory.length})
-          </Text>
-        </Pressable>
+        <PrimaryButton
+          text={`Intervals History (${intervalsHistory.length})`}
+          onPress={openIntervalsHistory}
+          style={styles.openHistoryBtn}
+        />
       )}
       <View style={styles.timerContainer}>
-        <Text style={styles.title}>Timer</Text>
-        <Text style={styles.timer}>
-          <Text style={styles.smallNumber}>Interval: </Text>
-          {formatTime(timer)}
-        </Text>
+        <Title>Timer</Title>
+        <FormattedTime label={"Interval : "} time={timer} />
 
-        <View style={styles.center}>
+        <View style={styles.centerBtns}>
           {!timerStarted ? (
-            <Pressable
-              style={styles.button}
+            <PrimaryButton
+              text={"Start"}
               onPress={() => setTimerStarted(true)}
-            >
-              <Text style={styles.buttonText}>Start</Text>
-            </Pressable>
+            />
           ) : (
-            <Pressable style={styles.button} onPress={markInterval}>
-              <Text style={styles.buttonText}>Interval</Text>
-            </Pressable>
+            <PrimaryButton text={"Interval"} onPress={markInterval} />
           )}
           {timer > 0 && !timerStarted ? (
-            <Pressable style={styles.button} onPress={resetTimer}>
-              <Text style={styles.buttonText}>Reset</Text>
-            </Pressable>
+            <PrimaryButton text={"Reset"} onPress={resetTimer} />
           ) : timer > 0 && timerStarted ? (
-            <Pressable
-              style={styles.button}
+            <PrimaryButton
+              text={"Pause"}
               onPress={() => setTimerStarted(false)}
-            >
-              <Text style={styles.buttonText}>Pause</Text>
-            </Pressable>
+            />
           ) : null}
         </View>
       </View>
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: Colors.background,
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.two,
-    alignItems: "center",
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
   timerContainer: {
     alignItems: "center",
     justifyContent: "center",
@@ -212,47 +176,14 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.two,
     paddingBottom: Spacing.six,
   },
-  smallNumber: {
-    fontSize: 14,
-  },
-  showIntervalsHistoryBtn: {
+  openHistoryBtn: {
     position: "absolute",
-    bottom: "26%",
-    right: "5%",
-    padding: Spacing.two,
-    backgroundColor: Colors.accent,
-    borderRadius: 8,
+    bottom: "28%",
+    right: "3%",
   },
-  title: {
-    textAlign: "center",
-    color: Colors.textPrimary,
-    fontSize: FontSize.title,
-  },
-  intervalsTitle: {
-    textAlign: "center",
-    color: Colors.textPrimary,
-    fontSize: FontSize.title,
-    marginBottom: Spacing.one,
-  },
-  timer: {
-    textTransform: "uppercase",
-    color: Colors.textPrimary,
-    fontSize: FontSize.subTitle,
-  },
-  center: {
+  centerBtns: {
     justifyContent: "center",
     flexDirection: "row",
     gap: Spacing.two,
-  },
-  button: {
-    backgroundColor: Colors.accent,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-    borderRadius: 12,
-  },
-
-  buttonText: {
-    color: Colors.textAccent,
-    fontWeight: "600",
   },
 });

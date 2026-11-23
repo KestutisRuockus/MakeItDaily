@@ -1,15 +1,9 @@
-import { Colors, FontSize, Spacing } from "@/constants/theme";
+import { FormattedTime } from "@/components/ui/FormattedTime";
+import { ScrollContainer } from "@/components/ui/ScrollContainer";
+import { Colors, Spacing } from "@/constants/theme";
 import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
-import { formatTime } from "@/utils/formatTime";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import {
-    Alert,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function IntervalDetails() {
@@ -59,67 +53,33 @@ export default function IntervalDetails() {
         }}
       />
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.content}
-        >
+        <ScrollContainer>
           {item?.intervals.map((interval, index) => (
-            <Text key={index} style={styles.timer}>
-              {`${index + 1}). ${formatTime(interval)}`}
-            </Text>
+            <FormattedTime
+              key={index}
+              label={`${index + 1}).`}
+              time={interval}
+            />
           ))}
           <View style={styles.bottomSection}>
-            <Text style={styles.headingText}>
-              {`Overall time: ${item?.overallTime ? formatTime(item.overallTime) : "00:00"}`}
-            </Text>
+            {item?.overallTime ? (
+              <FormattedTime
+                label={"Overall time : "}
+                time={item?.overallTime}
+              />
+            ) : (
+              "00:00"
+            )}
             <Pressable style={styles.deleteBtn} onPress={confirmDelete}>
               <Text style={styles.buttonText}>Delete</Text>
             </Pressable>
           </View>
-        </ScrollView>
+        </ScrollContainer>
       </SafeAreaView>
     </>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-
-  content: {
-    alignItems: "center",
-    padding: Spacing.four,
-  },
-  heading: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  headingText: {
-    color: Colors.textPrimary,
-    fontSize: 24,
-  },
-  body: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    gap: Spacing.four,
-  },
-  bodyText: {
-    color: Colors.textPrimary,
-    fontSize: 20,
-  },
-  divider: {
-    borderColor: Colors.border,
-    borderWidth: 1,
-    width: "100%",
-    marginVertical: Spacing.two,
-  },
-  timer: {
-    textTransform: "uppercase",
-    color: Colors.textPrimary,
-    fontSize: FontSize.subTitle,
-  },
   bottomSection: {
     marginTop: Spacing.three,
     justifyContent: "center",
