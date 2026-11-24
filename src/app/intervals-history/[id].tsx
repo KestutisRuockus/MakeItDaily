@@ -68,7 +68,7 @@ export default function IntervalDetails() {
                 time={item?.overallTime}
               />
             ) : (
-              "00:00"
+              <Text>"00:00"</Text>
             )}
             <Pressable style={styles.deleteBtn} onPress={confirmDelete}>
               <Text style={styles.buttonText}>Delete</Text>
