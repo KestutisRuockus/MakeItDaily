@@ -1,7 +1,7 @@
 import { FormattedTime } from "@/components/ui/FormattedTime";
 import { ScrollContainer } from "@/components/ui/ScrollContainer";
 import { Colors, Spacing } from "@/constants/theme";
-import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
+import { useIntervalsHistory } from "@/context/TimerHistoryContext";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

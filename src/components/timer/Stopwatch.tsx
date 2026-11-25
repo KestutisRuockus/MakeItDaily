@@ -1,5 +1,6 @@
 import { Colors, Spacing } from "@/constants/theme";
-import { useEffect, useState } from "react";
+import { StopwatchHistoryItem } from "@/context/TimerHistoryContext";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { FormattedTime } from "../ui/FormattedTime";
 import { PrimaryButton } from "../ui/PrimaryButton";
@@ -7,7 +8,11 @@ import { ScreenContainer } from "../ui/ScreenContainer";
 import { Title } from "../ui/Title";
 import { Clock } from "./Clock";
 
-export function Stopwatch() {
+type StopwatchProps = {
+  setStopwatchHistory: React.Dispatch<SetStateAction<StopwatchHistoryItem[]>>;
+};
+
+export function Stopwatch({ setStopwatchHistory }: StopwatchProps) {
   const [timer, setTimer] = useState<number>(0);
   const [timeStopped, setTimeStopped] = useState<boolean>(true);
 
@@ -28,7 +33,13 @@ export function Stopwatch() {
   };
 
   const saveTime = () => {
-    console.log("Stopwatch saved");
+    const newRecord: StopwatchHistoryItem = {
+      id: Date.now().toString(),
+      duration: timer,
+      date: new Date().toISOString(),
+    };
+    setStopwatchHistory((prev) => [...prev, newRecord]);
+    console.log("Stopwatch saved", newRecord);
     setTimer(0);
   };
 

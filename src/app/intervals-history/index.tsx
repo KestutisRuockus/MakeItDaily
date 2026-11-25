@@ -2,12 +2,12 @@ import IntervalCard from "@/components/IntervalCard";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import {
-  BottomTabInset,
-  Colors,
-  MaxContentWidth,
-  Spacing,
+    BottomTabInset,
+    Colors,
+    MaxContentWidth,
+    Spacing,
 } from "@/constants/theme";
-import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
+import { useIntervalsHistory } from "@/context/TimerHistoryContext";
 import { useRouter } from "expo-router";
 
 import { FlatList, StyleSheet, Text, View } from "react-native";

@@ -1,5 +1,5 @@
 import { Colors, Spacing } from "@/constants/theme";
-import { IntervalHistoryItem } from "@/context/IntervalsHistoryContext";
+import { IntervalHistoryItem } from "@/context/TimerHistoryContext";
 import { formatTime } from "@/utils/formatTime";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";

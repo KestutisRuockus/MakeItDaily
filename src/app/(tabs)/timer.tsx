@@ -1,14 +1,19 @@
 import { Stopwatch } from "@/components/timer/Stopwatch";
-import { useIntervalsHistory } from "@/context/IntervalsHistoryContext";
+import { useTimerHistory } from "@/context/TimerHistoryContext";
 
 export default function Timer() {
-  const { intervalsHistory, setIntervalsHistory } = useIntervalsHistory();
+  const {
+    intervalsHistory,
+    setIntervalsHistory,
+    stopwatchHistory,
+    setStopwatchHistory,
+  } = useTimerHistory();
 
   return (
     // <IntervalTimer
     //   intervalsHistory={intervalsHistory}
     //   setIntervalsHistory={setIntervalsHistory}
     // />
-    <Stopwatch />
+    <Stopwatch setStopwatchHistory={setStopwatchHistory} />
   );
 }

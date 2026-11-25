@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/theme";
-import { IntervalsHistoryProvider } from "@/context/IntervalsHistoryContext";
+import { IntervalsHistoryProvider } from "@/context/TimerHistoryContext";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
